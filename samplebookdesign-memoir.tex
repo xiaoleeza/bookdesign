@@ -1,0 +1,1030 @@
+\documentclass[11pt,twoside,openany,x11names,svgnames]{memoir}
+\usepackage{indentfirst}
+\usepackage[UTF8,cap,nofonts]{ctex} %,fancyhdr,hyperref winfonts,nofonts
+
+% set up fonts
+  \setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{Adobe Song Std}
+  \setCJKsansfont{Adobe Heiti Std}
+  \setCJKmonofont{Adobe Kaiti Std}
+  \setCJKfamilyfont{song}{Adobe Song Std}
+  \setCJKfamilyfont{hei}{Adobe Heiti Std}
+  \setCJKfamilyfont{fs}{Adobe Fangsong Std}
+  \setCJKfamilyfont{kai}{Adobe Kaiti Std}
+\newcommand{\song}{\CJKfamily{song}}    % 宋体
+\newcommand{\fs}{\CJKfamily{fs}}        % 仿宋体
+\newcommand{\kai}{\CJKfamily{kai}}      % 楷体
+\newcommand{\hei}{\CJKfamily{hei}}      % 黑体
+
+\usepackage{lmodern}
+\usepackage{wallpaper}
+\usepackage{tikz}
+\usetikzlibrary{shapes,positioning}
+
+\usepackage{lipsum}
+\usepackage[ISBN=978-80-85955-35-4]{ean13isbn}
+
+%% Custom stock paper and page size
+\setstocksize{303mm}{216mm}
+\settrimmedsize{\stockheight}{\stockwidth}{*}
+
+%% Adjust margins around typeblock
+\setlrmarginsandblock{23mm}{18mm}{*}
+\setulmarginsandblock{23mm}{23mm}{*}
+
+%% Header and footer heights
+\setheadfoot{\baselineskip}{10mm}
+\setlength\headsep{7mm}
+
+%% To apply and enforce layout
+\checkandfixthelayout
+
+%% Command to hold chapter illustration image
+\newcommand\chapterillustration{}
+
+%% Define a fancy chapter style
+\makechapterstyle{FancyChap}{
+%% Vertical Space before main text starts
+\setlength\beforechapskip{0pt}
+\setlength\midchapskip{0pt}
+\setlength\afterchapskip{137mm}
+%% Will print chapter number and title
+%% in one go ourselves
+\renewcommand*\printchaptername{}
+\renewcommand*\printchapternum{}
+%%% Re-define how the chapter title is printed
+\def\printchaptertitle##1{
+%% Background image at top of page
+\ThisULCornerWallPaper{1}{\chapterillustration}
+%% Draw a semi-transparent rectangle across the top
+\tikz[overlay,remember picture]
+  \fill[fill=LightSalmon1,opacity=.7]
+  (current page.north west) rectangle
+  ([yshift=-3cm] current page.north east);
+  %% Check if on an odd or even page
+  \strictpagecheck\checkoddpage
+  %% On odd pages, "logo" image at lower right
+  %% corner; Chapter number printed near spine
+  %% edge (near the left); chapter title printed
+  %% near outer edge (near the right).
+  \ifoddpage{
+    \ThisLRCornerWallPaper{.35}{fern_mo_01}
+    \begin{tikzpicture}[overlay,remember picture]
+    \node[anchor=south west,
+      xshift=20mm,yshift=-30mm,
+      font=\sffamily\bfseries\huge]
+      at (current page.north west)
+      {\chaptername\chapternamenum\thechapter};
+    \node[fill=Sienna!80!black,text=white,
+      font=\Huge\bfseries,
+      inner ysep=12pt, inner xsep=20pt,
+      rounded rectangle,anchor=east,
+      xshift=-20mm,yshift=-30mm]
+      at (current page.north east) {##1};
+    \end{tikzpicture}
+  }
+  %% On even pages, "logo" image at lower left
+  %% corner; Chapter number printed near outer
+  %% edge (near the right); chapter title printed
+  %% near spine edge (near the left).
+  \else {
+    \ThisLLCornerWallPaper{.35}{fern_mo_01}
+    \begin{tikzpicture}[overlay,remember picture]
+    \node[anchor=south east,
+      xshift=-20mm,yshift=-30mm,
+      font=\sffamily\bfseries\huge]
+      at (current page.north east)
+      {\chaptername\chapternamenum\thechapter};
+    \node[fill=Sienna!80!black,text=white,
+      font=\Huge\bfseries,
+      inner sep=12pt, inner xsep=20pt,
+      rounded rectangle,anchor=west,
+      xshift=20mm,yshift=-30mm]
+      at ( current page.north west) {##1};
+    \end{tikzpicture}
+  }
+  \fi
+}
+}
+
+
+%% Define a fancy chapter style for unnumbered
+%% chapters (e.g. the Table of Contents)
+\makechapterstyle{FancyUnnumberedChap}{
+%% Vertical Space before main text starts
+\setlength\beforechapskip{0pt}
+\setlength\midchapskip{0pt}
+\setlength\afterchapskip{47mm}
+%% Will print chapter number and title
+%% in one go ourselves
+\renewcommand*\printchaptername{}
+\renewcommand*\printchapternum{}
+%%% Re-define how the chapter title is printed
+\def\printchaptertitle##1{
+%% Draw a semi-transparent rectangle across the top
+\tikz[overlay,remember picture]
+  \fill[fill=LightSalmon1,opacity=.7]
+  (current page.north west) rectangle
+  ([yshift=-3cm] current page.north east);
+  %% Check if on an odd or even page
+  \strictpagecheck\checkoddpage
+  \ifoddpage{
+    \begin{tikzpicture}[remember picture, overlay]
+    \node[fill=Sienna!80!black,text=white,
+      font=\Huge\bfseries,
+      inner ysep=12pt, inner xsep=20pt,
+      rounded rectangle,anchor=east,
+      xshift=-20mm,yshift=-30mm]
+      at (current page.north east) {##1};
+    \end{tikzpicture}
+  }
+  \else {
+    \begin{tikzpicture}[remember picture, overlay]
+    \node[fill=Sienna!80!black,text=white,
+      font=\Huge\bfseries,
+      inner sep=12pt, inner xsep=20pt,
+      rounded rectangle,anchor=west,
+      xshift=20mm,yshift=-30mm]
+      at ( current page.north west) {##1};
+    \end{tikzpicture}
+  }
+  \fi
+}
+}
+
+
+%% Set the uniform width of the colour box
+%% displaying the page number in footer
+%% to the width of "99"
+\newlength\pagenumwidth
+\settowidth{\pagenumwidth}{99}
+
+%% Define style of page number colour box
+\tikzset{pagefooter/.style={
+anchor=base,font=\sffamily\bfseries\small,
+text=white,fill=Sienna!80!black,text centered,
+text depth=17mm,text width=\pagenumwidth}}
+
+%% Concoct some colours of our own
+\definecolor[named]{GreenTea}{HTML}{CAE8A2}
+\definecolor[named]{MilkTea}{HTML}{C5A16F}
+\definecolor[named]{brown}{HTML}{330100}
+
+%% Sometimes I prefer not to upper-case my
+%% running headers
+\nouppercaseheads
+
+%%%%%%%%%%
+%%% Re-define running headers on non-chapter odd pages
+%%%%%%%%%%
+\makeoddhead{headings}
+%% Left header is empty but I'm using it as a hook to paint the
+%% background rectangles underneath everything else
+{\begin{tikzpicture}[remember picture,overlay]
+\fill[MilkTea!25!white] (current page.north east)
+	rectangle (current page.south west);
+\fill[white, rounded corners]
+	([xshift=-10mm,yshift=-20mm]current page.north east) rectangle 	
+	([xshift=15mm,yshift=17mm]current page.south west);
+\end{tikzpicture}}%
+%% Blank centre header
+{}%
+%% Display a decorate line and the right mark (chapter title)
+%% at right end
+{\begin{tikzpicture}[xshift=-.75\baselineskip,yshift=.25\baselineskip,remember picture, overlay,fill=GreenTea,draw=GreenTea]\fill circle(3pt);\draw[semithick](0,0) -- (current page.west |- 0,0);\end{tikzpicture}\sffamily\itshape\small\rightmark}
+
+%%%%%%%%%%
+%%% Re-define running footers on odd pages
+%%% i.e. display the page number on the right
+%%%%%%%%%%
+\makeoddfoot{headings}{}{}{%
+\tikz[baseline]\node[pagefooter]{\thepage};}
+\makeoddfoot{plain}{}{}{\tikz[baseline]\node[pagefooter]{\thepage};}
+
+%%%%%%%%%%
+%%% Re-define running headers on non-chapter even pages
+%%%%%%%%%%
+\makeevenhead{headings}
+%% Draw the background rectangles; then the left mark (section
+%% title) and the decorate line
+{{\begin{tikzpicture}[remember picture,overlay]
+\fill[MilkTea!25!white] (current page.north east) rectangle (current page.south west);
+\fill[white, rounded corners] ([xshift=-15mm,yshift=-20mm]current page.north east) rectangle ([xshift=10mm,yshift=17mm]current page.south west);
+\end{tikzpicture}}%
+\sffamily\itshape\small\leftmark\
+\begin{tikzpicture}[xshift=.5\baselineskip,yshift=.25\baselineskip,remember picture, overlay,fill=GreenTea,draw=GreenTea]\fill (0,0) circle (3pt); \draw[semithick](0,0) -- (current page.east |- 0,0 );\end{tikzpicture}}{}{}
+\makeevenfoot{headings}{\tikz[baseline]\node[pagefooter]{\thepage};}{}{}
+\makeevenfoot{plain}{\tikz[baseline]\node[pagefooter]{\thepage};}
+%% Empty centre and right headers on even pages
+{}{}
+
+\begin{document}
+
+\frontmatter
+
+%%%%%%%%%%%%%%
+%% Cover page
+%%%%%%%%%%%%%%
+
+%% No header nor footer on the cover
+\thispagestyle{empty}
+
+%% Cover illustration
+\ThisLLCornerWallPaper{1}{aliphant}
+
+%% Bar across the top
+\tikz[remember picture,overlay]%
+\node[fill=Sienna,text=white,font=\LARGE\bfseries,text=Cornsilk,%
+minimum width=\paperwidth,minimum height=5em,anchor=north]%
+at (current page.north){Contribute to Prospective Graduate Students};
+
+\vspace*{2\baselineskip}
+
+{\bfseries\itshape\color{brown}\fontsize{36pt}{46pt}\selectfont
+I know that my Futhure\par
+is Not Just A Dream\par}
+
+\vspace*{2\baselineskip}
+
+\begin{flushright}
+{\LARGE\color{brown}
+A handbook by \LaTeX\par
+}
+\end{flushright}
+
+\tikz[remember picture,overlay]%
+\node[fill=Sienna,font=\LARGE\bfseries,text=Cornsilk,%
+minimum width=\paperwidth,minimum height=3em,anchor=south]%
+ at (current page.south) {Released by \TeX{er} Enthusiasm};
+
+\begin{center}
+\LARGE\bfseries\color{SaddleBrown!30!black}
+
+\end{center}
+
+\cleartorecto
+
+%% Invoke fancy unnumbered chapter style
+%% for the table of contents
+\chapterstyle{FancyUnnumberedChap}
+\tableofcontents*
+
+%% Main matter starts here; resets page-numberings to arabic numeral 1
+\mainmatter
+
+%% Invoke the FancyChap chapter style
+\chapterstyle{FancyChap}
+
+%% Public domain image from
+%% http://www.public-domain-image.com/objects/computer-chips/slides/six-computers-chips-circuits.html
+\renewcommand\chapterillustration{dandelion}
+\chapter{高分经验}
+\section{93分英语达人的笔记}
+\renewcommand{\indent}{1em}
+\noindent 一.考研阅读的基本解题思路：（四步走）
+
+第一，扫描提干，划关键项。
+
+第二， 通读全文，抓住中心。
+\begin{enumerate}
+  \item 通读全文，抓两个重点：
+\begin{itemize}
+  \item 首段（中心句、核心概念常在第一段，常在首段出题）
+  \item 其他各段的段首和段尾句。（其他部分略读，有重点的读）
+\end{itemize}
+  \item 抓住中心，用一分半时间思考3个问题：
+\begin{itemize}
+  \item 文章叙述的主要内容是什么？
+  \item 文章中有无提到核心概念？
+  \item 作者的大致态度是什么？
+\end{itemize}
+\end{enumerate}
+
+第三，仔细审题，返回原文。（仔细看题干，把每道题和原文的某处建立联系，挂起钩）
+定位原则：
+\begin{itemize}
+  \item 通常是由题干出发，使用寻找关键词定位原则。（关键词：大写字母、地名、时间、数字等）
+  \item 自然段定位原则。出题的顺序与行文的顺序是基本一致的，一般每段对应一题。
+\end{itemize}
+要树立定位意识，每一题、每一选项都要回到原文中某一处定位。
+
+第四，重叠选项，得出答案。（重叠原文=对照原文）
+\begin{enumerate}
+  \item 通过题干返回原文：判断四个选项，抓住选项中的关键词，把选项定位到原文的某处比较，重叠选项，选出答案。
+  \item 作题练习要求：要有选一个答案的理由和其余三个不选的理由
+\end{enumerate}
+
+二.阅读理解的解题技巧
+\begin{enumerate}
+  \item 例证题
+  \begin{itemize}
+  \item 例证题的标记。当题干中出现example, case, illustrate, illustration, exemplify时
+  \item 返回原文，找出该例证所在的位置，既给该例子定位
+  \item 搜索该例证周围的区域，90\%{}向上，10\%{}向下，找出该例证支持的观点。例子周围具有概括抽象性的表达通常就是它的论点
+  \item 找出该论点，并与四个选项比较，得出选项中与该论点最一致的答案
+  \item 例证题错误答案设计的干扰特征经常是：就事论事。 即用例子中的某一内容拉出来让你去选。($\times$)
+\end{itemize}
+
+{\hei 注意}：举例的目的是为了支持论点或是为了说明主题句。举例后马上问这个例子说明了什么问题？不能用例子中的话来回答这个问题。
+
+要求：在阅读中，遇到长的例子，立即给这个例子定位，即找出起始点，从哪开始到哪结束。
+\item 指代题
+\begin{itemize}
+  \item 返回原文，找出出题的指代词
+  \item 向上搜索，找最近的名词、名词性短语或句子（先从最近点开始找，找不到再找次近的，一般答案不会离得太远）
+  \item 将找到的词、词组或句子的意思代入替换该指代词，看其意思是否通顺
+  \item 将找到的词、词组或句子与四个选项进行比较，找出最佳答案
+\end{itemize}
+\item 词汇题 ：“搜索代入”法
+\begin{itemize}
+  \item 返回原文，找出该词汇出现的地方
+  \item 确定该词汇的词性
+  \item 从上下文（词汇的前后几句）中找到与所给词汇具有相同词性的词（如一下子找不到就再往上往下找），代入所给词汇在文章中的位置（将之替换）看语义是否合适
+  \item 找出选项中与代替词意思相同或相近的选相，即答案
+\end{itemize}
+
+{\hei 注意}
+\begin{enumerate}[a.]
+  \item 如果该词汇是简单词汇，则其字面意思必然不是正确答案
+  \item 考研阅读不是考察字认识不认识，而是考察是否能根据上下文作出正确的判断
+  \item 词汇题的正确答案经常蕴藏在原文该词汇出现的附近。注意不能靠单词词义直接往下推
+  \item 寻找时要注意同位语、特殊标点（比如分号，分号前后两句话的逻辑关系不是形式上的并列就是语义上的并列，也就是两句话的意思相同，所以可用其中一句话的意思来推测另一句话的意思从而推出所给词汇含义）、定语从句、前后缀，特别要注意寻找时的同性原则。比如：让猜一个名词词组（动词词组）的意思，我们就向上向下搜索名词词组（动词词组）
+\end{enumerate}
+
+隐蔽型词汇题：题干与原文的某句完全重合，只有一两个词被替换掉。隐蔽型词汇题的做法跟词汇题的做法几乎一样，往上往下找。
+\item 句子理解题
+\begin{itemize}
+  \item 返回原文找到原句
+  \item 对原句进行语法和词义的精确分析（找主干），应该重点抓原句的字面含义。若该句的字面含义不能确定，则依据上下文进行判断。注意：局部含义是由整体决定的
+  \item 一般来说，选项中的正确答案与原句意思完全相同，只不过用其他英语词汇换种表达而已
+  \item 句子理解题的错误选项干扰项特征：推得过远。做题时应把握住推的度
+\end{itemize}
+思路： 对句子微观分析? 不行就依据上下文? 选择时不要推得过远。
+\item 推理题 ：“最近原则”
+\begin{itemize}
+  \item 标志： learn, infer, imply, inform
+  \item 看是否可以通过题干返回原文或依据选项返回原文。一般要围绕文中的一两个重点进行推理。推理题无论通过题干能不能定位，我们都要把它固化到文章的一两点上
+  \item 依据原文的意思进行三错一对的判断。先不要进行推理，若有一个选项跟原文的意思一模一样，则该选项必然是正确答案。推理题不是考察我们的想象力，它实际是考察我们原文中的某几个点如一个、两个点所涉及的问题我们读透了没有。因此，不推的比推的好；推的近的比推的远的要好
+  \item 推理题的最近答案原则：不推的要比推的好，推的近的要比推的远的好，直接推出的要比间接推的好。(原文的某句话变个说法)
+\end{itemize}
+
+{\hei 注意}：做题时不能想得太多，推得过远。是否把原文读懂才是关键。
+\item 主旨题 ： “串线摘帽”即在自然段少的时候串串线，串线法解不出来时，大帽子、小帽子摘一下。
+\begin{itemize}
+  \item 主旨题的标志：mainly about, mainly discuss, the best title
+  \item 串线法：抓首段和其余各段的第一句话，把其意思连接成一个整体。要注意总结性的提示词和转折词，特别要注意中心句。（主要针对自然段少的文章；针对自然段多的文章，主旨题最好联系中心句。找一个和中心句最贴近的）
+  \item 小心首段陷阱
+  \item 主旨题错误选项的干扰特征
+  \begin{enumerate}[(1)]
+  \item 局部信息，即选项的内容小于文章的内容
+  \item 范围过宽，即选项的内容大于文章的内容
+\end{enumerate}
+  \item 逆向思维法、快速作文法：在两个选项看上去都十分正确无法选择时，试着从选项出发，想象一下如果自己以此选项来写文章会有那些内容，然后把它与文章的内容比较，接近的即为正确选项
+\end{itemize}
+\item 作者态度题
+\begin{itemize}
+  \item 标志：attitude
+  \item 应精确理解四个选项的含义
+  \item 不要掺杂自己的观点
+  \item 可以寻找文中一些具有感情色彩的词。如：fortunately, excessively, too many
+  \item 举例的方式
+  \item 抓论述的主线。把第一段读透，把其他各段的段首段尾句拉出来，看整个文章的谋篇结构
+  \item 做作者态度题时特别注意：首先看清楚是谁对谁的态度
+\end{itemize}
+\item 判断题
+\begin{itemize}
+  \item 看可否通过四个选项具体化到文中一点或者根据自然段原则定位
+  \item 每个选项都应返回原文，不能凭主观印象进行判断
+  \item 要重点抓是“三错一对”还是“三对一错”的关系（做题是要看清题目）
+\end{itemize}
+\item 细节题：看完题目回到原文，重叠原文，得出答案
+\item 重点题型中的几个问题
+\begin{itemize}
+  \item 词汇题：字面意思不是答案，要根据上下文推测其深刻含义
+  \item 句子理解题：一般不要求推理，只看句子本身
+  \item 推理题：答案很大程度上是原文的重现，不一定非要经过逻辑推理从原文中得出
+\end{itemize}
+\item 正确答案的特征
+\begin{itemize}
+  \item 正确答案经常与中心思想有关
+  \item 正确答案的位置，最常见的三个位置是：段首段尾处、转折处、因果处
+  \item 正确答案经常运用的原则是：同义替换、正话反说、反话正说
+  \item 从语气角度来看，正确答案中经常含有不肯定的语气词和委婉表达的用词。如：can, may, might, possible, not necessarily, some
+  \item 正确答案经常具有概括性、深刻性，不能只见树木不见森林
+\end{itemize}
+\item 错误答案的特征：
+\begin{description}
+  \item[第一大层次] \textcolor{white}{f}
+  \begin{description}
+  \item[无中生有] 未提及的概念
+  \item[正反混淆] 选项的意思跟原文的意思正好相反
+  \item[所答非所问] 虽然选项的说法没有问题，符合原文，但和题干搭不上边
+\end{description}
+  \item[第二大层次] \textcolor{white}{f}
+  \begin{description}
+  \item[过分绝对] \textcolor{white}{f}
+  \item[扩大范围] 注意隐蔽型的扩大范围mostly
+  \item[因果倒置] \textcolor{white}{f}
+  \item[常识判断] \textcolor{white}{f}
+  \item[推得过远] \textcolor{white}{f}
+  \item[偏离中心] \textcolor{white}{f}
+  \item[变换词性] \textcolor{white}{f}
+\end{description}
+\end{description}
+{\hei 常识判断}
+\begin{itemize}
+  \item 如果一个选项仅仅符合常识，不一定是正确答案，还要看文章中类似的意思有没有出现
+  \item 如果一个选项不符合常识，一定不是正答案
+\end{itemize}
+能够不由自主地按照正确的思路解题了，才表明我们正确掌握了这些技巧。
+\end{enumerate}
+三.阅读的技巧
+\begin{enumerate}
+  \item 标点符号在阅读中的作用
+\begin{description}
+  \item[句号] 用来分割句子 ，以句号为单位，把段分隔成块，逐个击破
+  \item[逗号] 在两个逗号中间是一个补充说明成分时，在阅读过程中可以献跳过去不读
+  \item[冒号] 冒号的后面进一步补充说明前面的内容，冒号的前后有一个从抽象到具体的过程
+  \item[分号] 分号是用来分隔句子的，并列结构：语意上的并列、结构上的并列
+  \item[破折号] 两个破折号之间是补充说明成分，在阅读中可以先不读。如果不能读懂破折号之前的句子的意思可借助破折号间的内容加以理解
+  \item[引号] 引用和讽刺两种作用
+  \begin{enumerate}[(a)]
+  \item 引用某人的观点（是支持还是反对）
+  \item 用来反讽，讽刺
+ \end{enumerate}
+  \item[括号] 两种作用：补充说明、解释生词
+\end{description}
+
+{\hei 引用的目的}：不论是正面还是反面引述都是为了说明核心概念、中心思想，否则就没有意义。
+\item 微观阅读的技巧
+\begin{itemize}
+  \item 抓主干
+  \item 看标点符号
+  \item 被动变主动
+  \item 消减否定法
+  \item 重新断句
+  \item 对照法。抓一些重点词
+  \begin{enumerate}[(1)]
+  \item {\hei 解释词}：namely（即，也就是）；likewise（同样的）；in other word（换句话说）that is to say（那就是说）……
+  \item {\hei 转折词的目的}：体会一种逻辑关系，也是经常出题的地方but, yet, although, however, in contrast（与之形成对照的是）
+  \item {\hei 表示结果的词}：thus, as a result, consequence
+  \item {\hei 表示递进的词}：further more, in addition to
+  \item {\hei 表示重要的词}：prime（首要的）； above all（最重要的）；first of all
+\end{enumerate}
+\end{itemize}
+\item 宏观阅读的方法 ：怎样对待一篇文章
+\begin{itemize}
+  \item 一般来说，任何一篇文章都讲一个主题
+  \item 注意抓两类文体
+  \begin{enumerate}[(1)]
+  \item 议论文，抓作者中心观点和作者态度
+  \item 说明文，抓说明对象和作者态度
+\end{enumerate}
+  \item 注意看清楚文章是由几个自然段构成，同时要注意看清楚文章的段落与段落之间是顺承结构还是转折结构
+  \item 注意文章的一些固有模式
+  \begin{description}
+  \item[启承传合型] 要特别注意启和合的前后呼应
+  \item[花开两朵型] 要注意两个核心概念的区别和联系
+  \item[问题答案型] 一般来说问题就是文章的中心，阅读的目的就是为了寻找问题的答案
+  \item[平铺直叙型] 注意抓首段和中心
+  \item[开门见山型] \textcolor{white}{f}
+\end{description}
+\end{itemize}
+\item 总结段落的固有模式
+\begin{itemize}
+  \item 中心句（段首句）$\Rightarrow$具体论述
+  \item 中心句（段首句）$\Rightarrow$具体论述$\Rightarrow$中心句（段尾句）{\color{blue}如果段首句和段尾句是呼应的话，那么其之间的话必然是支持句，也可能反着说一下，但最终还是支持段首或段首主题句的}
+  \item 过渡句（段首句）$\Rightarrow$具体论述
+  \item 中心句（段首句）$\Rightarrow$具体论述$\Rightarrow$转折$\Rightarrow$具体论述
+  \item 具体论述$\Rightarrow$中心句（段尾句）
+  \item 句句展开式（无明显主题句）指比较短的段落。{\color{blue}如只有三、四行的段落}。这样就没有必要在段首给出一个中心，后面再展开。而是直接把事情给描述一下就可以了
+\end{itemize}
+\item 读文章时需特别留意的细节
+\begin{itemize}
+  \item 举例、打比喻处
+  \item 人物论段
+  \item 转折处后
+  \item 复杂句
+  \item 因果句
+  \item 特殊标点
+  \item 段首段尾句
+\end{itemize}
+最常出题的地方是：中心思想或核心概念。中心思想 + 细节 = 文章
+\item 独句段在文章中的作用
+\begin{itemize}
+  \item 文尾的独句段所起的作用是：总结全文
+  \item 文章中间的独句段的作用是：承上启下
+\end{itemize}
+\end{enumerate}
+四.考研英语到底考什么？（阅读能力）
+\begin{enumerate}
+\item 观念转变和方法转变（close reading 细读）
+     考研考察细读、辨别能力。
+\item 阅读的重要性
+\item 考研文章类型的分析（来源、内容、体裁）
+\begin{itemize}
+  \item 来源：西方大学的一二年级课本、西方报刊杂志（从97年以后主要来自西方报刊杂志）
+  \item 从内容角度把44篇文章分类：社会科学为主，自然科学为辅，新的趋势是人文科学的文章
+
+\textcolor{blue}{文章的分类：（共44篇）}
+\begin{enumerate}[(3)]
+  \item 社会科学 （Social Science）有30篇
+
+\textcolor{blue}{包括：}政治学、经济学、社会学、传播学、教育学、心理学、历史学、人类学、文化学等
+\textcolor{blue}{分析：}政治学，从89-03没有出过题，因为西方和东方的意识形态存在差异性，避开敏感话题，没有出过；
+   经济学，每年至少一篇；教育学，隔年出一次；传播学，隔年出一次。
+总结：泛读的重点——经济学、教育学、传播学、心理学。
+  \item 自然科学（Natural Science）有10篇
+
+10篇中，纯而有纯的自然科学很少，只有约4篇。命题集中在科学史方面。
+出题的原则：一般性原则，公正性原则。
+   {\hei 总结}：泛读自然科学的文章，少读纯自然科学的文章，多读简介科学史的文章。
+  \item 人文科学
+
+\textcolor{blue}{包括：}文学、历史、哲学（还剩4篇）
+\textcolor{blue}{分析：}88--99年，11年中从未出过题。
+\begin{itemize}
+  \item 00年（3）文学评论—未来主义诗歌
+  \item 00（5）散文—雄心壮志
+  \item 01年（5）散文—我这个人的一段心路历程
+  \item 02年（1）讲幽默，题目有迷惑性
+\end{itemize}
+{\hei 总结}：人文科学出题有抬头趋势。
+\end{enumerate}
+\item 从体裁角度把44篇文章分类：议论文、说明文、记叙文、应用文。
+多读：议论文、说明文。  （从来没有出现过记叙文，应用文只出过1篇）
+\item 从语言上，以美国英语为主。突显美国英语与美国文化，应该多了解一些美国的基本概况。最好有一幅美国地图。
+\end{itemize}
+\item 新大纲中对于阅读理解的总体要求(阅读速度和8点阅读要求)
+\begin{itemize}
+  \item 阅读速度：（02年开始为4篇x 5题）每篇文章略有增加，但增加不大。要求文章读得更细了，用close reading(细读)的方式击破考研阅
+读。比较适合的阅读速度为：45-50/分
+  \item 八点阅读要求
+  \begin{enumerate}[(1)]
+  \item 能够抓住文章中的主旨大意
+  \item 理解文章中的具体信息
+  \item 理解概念性的含义(concept)
+  \item 进行有关的判断、推理和引申的能力（解体思路应尽量适应命题专家）
+  \item 根据上下文推测生词含义
+  \item 理解文章的谋篇结构及段与段、句与句的逻辑关系
+  \item 理解作者的意图、观点、态度
+  \item 区分论点和论据
+\end{enumerate}
+  \item 新大纲提出的三点要求
+  \begin{enumerate}[(1)]
+  \item 词语的概念性含义
+  \item 理解文章的谋篇结构
+  \item 区分论点和论据
+\end{enumerate}
+\end{itemize}
+\item 新大纲的特点（3个）
+\begin{itemize}
+  \item 放慢作题速度（close reading仔细阅读），阅读速度要求我们读得更细更慢了
+  \item 词的变化（passage变成了text），重视文章总体结构的把握，这要求从结构的角度来读文章
+  \item 命题范围没有任何变化
+  \item 强调时效性。考研阅读“赶时髦”，与当今形势联系较紧，多看一些时文（经济方面）
+\end{itemize}
+97年（1）法律时文；97年（5）经济时文；96年（3）经济-劳资变化；
+99年（2）互联网；01年（4）全球并购浪潮；02年（4）安乐死
+\end{enumerate}
+五.考研阅读的时间分配问题
+\begin{enumerate}
+  \item 4篇75—80分钟，平均每篇15—20分钟
+  \item 读文章的时间分配：用6—8分钟完成第一遍阅读，10—14分钟来琢磨题目，每题平均2分钟
+\end{enumerate}
+六.考研阅读的特点
+\begin{enumerate}
+  \item 文章单词量不大，但句型结构复杂。(熟背大纲，将每篇文章中的长难句摘录下来，加以背诵)
+  \item 作者的观点不一定明确
+  \item 选项的迷惑性比较大
+\end{enumerate}
+七.阅读理解中做题误区：
+\begin{enumerate}
+  \item 读的太快，做题靠印象和直觉。（要求每一道题回到原文去找答案）
+  \item 先看题目，后读文章。（与先读文章后看题目的比较）\textcolor{blue}{考研阅读方法}：先通读全文，重点读首段、各段的段首段尾句，然后其他部分可以略读，再审题定位，重叠选项，选出答案。要有把握文章宏观结构、中心句的能力。
+  \item  阅读中需要特别注意并做记号的有
+  \begin{itemize}
+  \item 标志类、指示类的信息
+  \begin{enumerate}[(a)]
+  \item 表示并列关系:and;also;coupled with等
+  \item 表示转折关系:but;yet;however;by contrast等
+  \item 表示因果关系:therefor;thereby;consequently;as a result等
+  \item 表示递进关系:in addition to;even;what'more;furthermore等
+  \item 表示重要性的词: prime;above all;first等
+  \end{enumerate}
+  以上关键词有助于我们对文章逻辑结构的把握
+  \item 具有感情色彩显示作者态度的词:blind盲目的（贬）excessively过分的（贬）
+\end{itemize}
+\end{enumerate}
+八.考研阅读最基本的复习方法：
+
+共有3个key word
+\begin{enumerate}[(1)]
+  \item 细读（close reading）
+  \item 阅读三步走
+  \item 48精读击破法
+\end{enumerate}
+基本的学习方法：精读和泛读相结合。精读与泛读的比例 1：1
+第一，精读：
+“48精读击破法”复习方式：以点代面。切忌题海战术！精读吃透94-04年的真题文章。
+\begin{enumerate}
+  \item 精读的角度
+  \begin{itemize}
+  \item \textcolor{blue}{词汇}：把文章中的单词要背会、要全部熟悉掌握
+  \item \textcolor{blue}{对阅读中的长句、难句进行分析}：每篇文章中摘出5—10个长难句背诵，翻译
+  \item \textcolor{blue}{解题思路}：要对题目进行分析——解题思路的分析、 错误分析。对题目中的四个选项要做分析，正确的选项要做分析，错误的选项也要做分析
+\end{itemize}
+  \item 对48篇真题精读
+  \begin{itemize}
+  \item \textcolor{green}{首先}：分析文章，对题目中的四个选项要做分析。正确的选项要做分析，错误的选项也要做分析。\textcolor{green}{其次}：把文章中的单词要背会，要全部熟练掌握。长难句要摘取下来背诵、翻译。
+  \item 重点文章，有时需要背诵全文
+  \item 对于文章则可以多角度的读，题目也可以多角度的分析
+\end{itemize}
+  \item 五层递进的方法精读48篇文章
+  \begin{itemize}
+  \item \textcolor{green}{抓住文章的中心}：考研文章特重视抓住中心意思的能力。 中心思想 + 细节 = 文章。要反复把自己以前的思路同现在的思路作对比，才可以提高自己把握中心的能力。
+  \item \textcolor{green}{抓各个自然段的大意}：争取用一两个词或词组概括整个自然段的大意，并且把意思相近的自然段合为一体，即给文章分层。
+  \item 以自然段为单位，对文章进行深入剖析。即对单词、词组的记忆和对长句的精确分析、背诵。
+  \item \textcolor{green}{佳句摘录}：
+  \item \textcolor{green}{换位思考层}：即考研专家为什么选这样的文章，选此文章的难度在那里，文章的谋篇结构事什么。可以与考研专家换位思考，还可以与作者换位。
+
+与作者换位：如果我是文章作者的话，在大约相同字数的条件下，要描述同一件事情，我会如何展开文章，然后同作者的思路做比较。
+\end{itemize}
+  \item 精读达到的基本要求
+  \begin{itemize}
+  \item 所有的单词都背过
+  \item 从文章中任何地方拿出一句话，都应该搞清楚，能分析出语法结构
+  \item 从文章中摘出来任何一个指代词，就马上可以知道它的指代关系
+\end{itemize}
+  \item 背单词
+  \begin{itemize}
+  \item 集中力量大面积的过单词（认知），用大纲就可以了
+  \item 以真题为范本，搞清这些词在句中的深刻含义
+\end{itemize}
+\end{enumerate}
+{\color{red}（大纲提到：一篇文章中生词的出现率应该小于等于3\% 。要注意模拟题的选择。）}
+
+第二，泛读：
+\begin{enumerate}
+  \item 泛读练习的目的
+  \begin{itemize}
+  \item 增强背景知识
+  \item 锻炼抓住文章中心的能力
+\end{itemize}
+  \item 建议
+  \begin{itemize}
+  \item 每周一次《China Daily》，时效性强，多注意经济文化、科技、观点类文章
+  \item 每月至少看一本英文杂志：《Time》,《News week》,《Economist》,《英语世界》,《优秀时文阅读》
+  \item 勤上网浏览相关英文新闻。推荐英文网站：www.yahoo.com
+  \item 要求泛读《新概念第四册》，每天泛读一篇，多遍泛读
+  \item 推荐两本辞典：朗文或牛津高级双解辞典、韦氏大学辞典
+\end{itemize}
+\end{enumerate}
+模拟题：一周4篇。精细地研究真题
+九.其他总结
+\begin{enumerate}
+  \item 阅读的启示
+  \begin{itemize}
+  \item 短文中的一些难以理解的句子有时并不会对理解全篇产生很大的障碍
+  \item 把握文章结构，抓住文章的核心概念
+  \item 踏踏实实地提高自己的阅读水平（70\% ），并且要掌握一定的阅读方法和技巧（30\% ）。要能够分辨哪
+些信息要读哪些信息不读
+  \item 考试阅读的最高目的：做题。阅读理解的重要原则：模糊中求准确
+\end{itemize}
+  \item 做题的启示
+  \begin{itemize}
+  \item 排除了两项之后，要选择与文章中心相关的一项
+  \item 四个选项中有两项意思相反时，其中必有一个是答案
+  \item 虽然是一道细节题，但也可以当成一道主旨题来做
+  \item 类比、比喻、列举、举例的目的都是为了说明中心
+\end{itemize}
+  \item 考研的文章与四六级文章的重要不同之处：前者重细读，后者重速度 。考研的文章重视考察抓住中心思想的能力。中心思想 + 细节 = 文章；  中心思想引领细节。要反复把自己以前的思路同现在的新思路作对比，才可以提高把握中心的能力。
+  \item 关于九堂课的阅读方法：微观和宏观
+
+  把握文章的结构怎么把握，它的脉络；掌握句子怎么去理解它的含义。另外，还有八大题型的总结。
+  \item 常见问题
+  \begin{itemize}
+  \item 读不懂怎么办？
+
+问题本身太空乏，应该仔细分析问题到底在哪。首先要能意识到自身问题所在。
+unconsciously incompetent （无意识地，无能力地） 属于问题认知的第一阶段；
+consciously incompetent （有意识地，无能力地） 属于问题认知的第二阶段；
+consciously competent （有意识地，有能力地） 属于问题认知的第三阶段；
+unconsciously competent （无意识地，有能力地） 属于问题认知的第四阶段。
+从认知的第三阶段达到第四阶段，是一个反复熟练的过程。“48精读击破法”
+  \item 读懂了文章之后还错题怎么办？
+  \item 做完了一遍不愿意看第二遍怎么办？
+  \item 做题技巧用不上怎么办？
+
+能够不由自主地按照正确的思路解题了，才表明我们正确掌握了这些技巧。
+在课堂听明白之后，还需要回去自己思考，针对自己的实际分析分析
+\end{itemize}
+①
+②
+③：
+④
+  \item 关于复习的安排
+
+先把上课讲完的文章趁热打铁，把文章固化下来；
+每天搞透一篇，然后把剩下的文章每天做一篇，做完了之后再精读。
+七月份开始，看文章同时应该做一些新题，做新题时要带点实战的感觉，即抽出80分钟时间做一套题。在时间较多的暑假中，一周两套题就可以了。
+到9、10月份每周保持做一套题就可以了。
+11、12月份时，停止做模拟题。把90、91、92、93年的考研真题做一下，并精读。
+48篇最少要轮到七八遍。
+\end{enumerate}
+\section{那些寂静微弱的梦想与幸福}
+%\lipsum[1-6]
+北疆给人的感觉，荒凉、风沙、寥寂、荒远。但在37岁女作家李娟的笔下，这片土地充满了温情和明快。李娟的文字，风格清新、明快、纯粹，原生态地再现了疆北风物，带着非常活泼的生机，洋溢着对记忆的临摹，充盈着对希望的渴求。我最近在读李娟的第四部作品《羊道·春牧场》，“羊道”系列是李娟与哈萨克牧民扎克拜妈妈一家共同生活、历经寒暑跋涉后，在几年时间内陆续写下的文字。“羊道”系列共三部，《羊道·春牧场》是“羊道”三部曲的第一部。
+
+李娟，1979年生于新疆阿勒泰，从未受过任何专业文学训练。她原来也是一位朝九晚五的办公室文员，业余时间创作，曾在《南方周末》、《文汇报》等开设专栏，并出版过散文集《九篇雪》、《我的阿勒泰》、《阿勒泰角落》。2007年春天，李娟终于下定决心，离开办公室，来到阿尔泰山扎克拜妈妈家，让自己的身体和这个游牧家庭一起驰骋，让自己的心灵和自然魂灵对话。
+
+羊道之上，李娟像游牧民族那样，学会了尊重自然规则、遵从内心声音、敬畏天地之物，也学会了顺从生活秩序、蹑手蹑脚生活、不敢惊动生活，甚至不去拍照片。李娟用自己的方式讲述着这些世界角落的人和事：“所有的文字都在强调他们的与众不同。而我，更感动于他们与世人相同的那部分。那些相同的欢乐，相同的忧虑与相同的希望。”李娟认为，自己只是这个保持纯真、节制生活的亲历和记录者，耳濡目染，让李娟对这个世界上最后一支最为纯正的游牧民族有了更深刻的认识，她觉得浸润其中，自己的心灵也得以成长和丰盈。在李娟笔下，这支真正意义上的游牧民族的生存景观得以呈现。这是一种与大自然生死相依，充满了艰辛、苦难而又自有其尊严与乐趣的古老生活。
+
+读李娟的文字，就仿佛也跟着她“迁徙”了一次。从开春时启程，一路上经历的风雨与寒冷、难行的山路与涉江，以及一路上的所见所闻，貌似很琐碎很细微，却不似一个小女子的话语，而像一位淡定的老人家坐在温暖的灯下，娓娓叙述一个平常不过的故事，让人听来感觉温暖又安宁，仿佛眯着眼睛坐在秋天的阳光下，听到了潺潺的溪水声。好的作品，就像山河之上、草芥之间的清风，在作者那温润、充满质朴钝感的文字中，给人希望与憧憬，给人温度与力量，给人以正能量。李娟这部作品完全具有了这些特质，可以用来明目，亦可用来清心。
+
+李娟是一个有生活心的俗世女子，从来没有浪费掉一滴生活，把眼所见的、心所悟的，都打包存在自己的记忆中，再在她的角落里将那些记忆缓缓流泻在纸上。桑格格说李娟是一个奇迹。诚如斯言。《羊道·春牧场》是李娟在大戈壁腹地用心、用爱点燃的烟火，欢喜了李娟自己，也灿烂了我们的精神世界。“想到卡西那些寂静微弱的梦想与幸福，它们本如浩茫山野里的一片草木般春荣秋败，梦了无痕。而我碰巧路过，又以文字记取，大声说出，使之独一无二。这是我的幸运。”内心拥有丰盈心灵的温度，即使处于北疆的天寒地冻，李娟依然可以感知那些寂静微弱的梦想与幸福。
+
+亲，请记着：你我平淡的生活之中，原来也藏着美丽的万花筒，只要我们拥有一双发现的眼睛，就可以收获属于自己的“寂静幸福”。
+\section{2014考研数学满分秘籍}
+应该说我的数学基础还是不错的，但之前并没有料到考研会拿到满分，这可
+能多少也会有运气的成分吧.回头看看考研复习过程发现的确复习的策略与方式
+都很到位，也算是付出了努力的结果。先大体说一下我数学复习的安排。
+
+我并不赞成题海战术，尤其在数学上更是如此，数学更强调的是数学基础即
+对基本概念，定理的把握，这不只是能记住这些东西，而且能够知道它的来龙去
+脉，能够独立推导，并很清楚它的应用范围和基本的考察点。同样数学还强调灵
+活的数学思维，这还是建立在对基本的东西很深刻的理解的基础上的，单纯多做
+题可能会多见识一些题型，但对于一些很灵活有新意的题目就可能无法应对，这
+和点石成金的故事是一样的道理。
+
+现在的考研题目越来越倾向于出得活一些，而且出题的人与办辅导班的人之
+间的较量也越来越尖锐和直接，这样只有靠自己的努力使自己真的有随机应变的
+能力才不至于陷入听天由命的境地。而这种能力的培养却来自于老老实实地将基
+础打牢， 这一点上要摒弃那种急功近利的想法，我想不论是考研还是成就一番
+别的什么事情，要想成功，首先要沉得住气，有一个长远的打算，而不是做一天
+算一天，同时要善于控制事情发展的节奏，不论太快抑或太慢都不好，你都得去
+考虑为什么会这样，怎样去解决。一个人不论处于顺风还是逆风，都要学会不断
+的去跟自己出难题，不断地去反省自己，自己主动把握自己的命运，他才能最后
+成功，这也算是我的一点忠告吧。下面切入正题 。
+
+第一阶段：在我的数学复习过程中，打基础占了一半左右的时间。这可能和
+大多数人一上来就用陈文灯的书有比较大的差别。从3月中下旬到7月底这段
+时间主要是看课本，没有接触任何数学的考验资料。高数与线代用的都是南开上
+课时的教材，顺便看了看原来大一大二时买的北大双博士系列的两本的学习辅导
+书（不是用来考研的那一套），其中线代那一本作为基础部分的练习还是相当不
+错的。
+
+在这一过程中课本看得很细，单是高数与线代就作了5本笔记，记的大多
+是一些定理，概念用自己的语言进行表述与推导，以及自己认为可以出题的切入
+点，这一过程现在看来很笨，但事实上越到考研的后一阶段它的效用就越发明显，
+而且不论考题如何变动，掌握了基础的东西，随机应变的主动权始终在你手中。
+这期间由于这种复习方式很磨人的性子，的确有坚持不下来的时候，所以五一的
+时候就借钱去泰山玩了一趟（考研中如果状态不好，一定要即时调整，放松自己）。
+而正是因为这次出游，回来将数学考研班给退掉了，回头想想如果暑假真的
+上考研班，以那种进度，我的数学肯定会出很大的问题，这次出游也算是一件很
+幸运而必要的行动吧。概率用的是浙大的教材，由于前面复习高数与线代时间没
+掌握好，到7月底我才开始看概率课本，当时还没觉察到时间的紧迫，直到系
+里有一位女生告诉我金融系女生那边陈文灯的书都看了3-4遍了，我才有点警
+醒。
+
+接下来的一个月，正是夏天最热的时候，却也是我考研阶段成果最丰的时候，
+尤其是数学，在这一阶段得到了质的飞跃，所以有时候我也在想若没有那次很不
+经意的对话，我想考研的结局会变的不可想象。那段时间我一般是晚上2点左
+右睡觉，早晨7：30就起了，真的没有觉得过累，那一段时间可以说是大学过程
+中学得最投入的，那种感觉真的很好，但这也留下了一些问题，这在后面会提到。
+在我考研过程中这种体会是非常深刻的，很多不经意的偶然事件最后却起了关键
+性的作用，这种经历多了使我觉得有种很幸运的感觉，在关键时刻我的运气显得
+一直都好于一般人，当然我想这里也会有一个在关键时刻捕捉机会以及把握机会
+的能力问题，之所以提这一点是希望大家有这点意识，留意一些小事，同时不要
+过于计较小的得失，不要患得患失，记住"塞翁失马焉知非福"。以上是数学第一
+阶段的复习。
+
+第二阶段：从7月底起，我开始加紧看概率课本，参考了陈文灯的复习指南
+与习题的概率部分的题目，因为当时也的确没时间细细的去看了，这样大概用了
+5天时间，坦白说陈文登概率的题目的确范围太小，套路过于老化，以致正对着
+出题人的枪眼，而且有些也过于基础，成为一种定式以后反而变成了坏事，你可
+能会去套一些定式，却不会留意如何从这些题目或者题型中去加深对基本概念，
+定理的理解，这样你可以掌握一个很窄的模式，却丢掉了涵盖范围更广的东西。
+不过在那个时候，因为本身我的概率就学得很粗糙，对一些基本的思想都没
+搞清楚，基础非常薄弱，复习指南上的题还是相对适合我当时的水平的。但是仍
+然会很心虚，根据学微积分与线代的经验，我知道我对于概率的掌握还没到那种
+真正学进去的程度，思维的东西没有学到，学到的只是定式或者说是模式。
+
+要提一点就是数学含三门，可能会学玩概率忘了微积分，所以在复习的各个
+阶段，要逐渐缩短这种循环周期，我并不主张三门课其头并进，毕竟三门课有所
+区别，要学一门就先学精了再继续推进，做成夹生饭会让你有种骑虎难下的感觉，
+到时你反而会耗费更多的时间去收拾烂摊子。基于以上这种想法，接下来我又回
+到微积分的复习。这时发现微积分忘得差不多了，应该说定理，概念还是很清楚，
+但是手特别生，最初复习时的那种得心应手的感觉一点都找不到，所以这段时间
+有点心慌，但由于这段时间复习强度大，而且的确驱动力非常大，所以很快就调
+整过来了。对于大家而言，复习过程中应该注意调解自己的心态，定下心来，千
+万不要慌张，自乱阵脚。
+
+微积分看的是陈文登复习指南的微积分部分，没有看习题集，也没有再做别
+的更多的题目，这一过程花了10天左右吧，事实上可能算起来看了两遍，但我
+先要提一下，对于考研辅导书除了政治我觉得没有必要一本书翻来覆去反反复复
+看好几遍，我的第二遍只是很快地将一些我认为经典的思路总结了一下进行了一
+下归类，整理了一些东西，算不上看了一遍书。但这是有个前提的，就是你第一
+遍就要看得很好，在看之前有很多同学说第一遍很多都看不懂，所以必须看好几
+遍，但我看的时候很流畅地就下来了，并没有觉得题很难，只是有些题有点偏，
+而且这一过程中，还能发现一些更好的思路，还可以从陈的思路进行扩展，去自
+己总结一些思路。
+
+这些东西我只能点到为止，无法细说，这就要靠大家各自的领悟能力自己去
+把握了。我想这段能够顺利地推进应该是第一阶段复习的结果，有了比较好的基
+础，对于大部分题目你即便没有看专门的考研辅导书也能单凭自己想出来，这就
+是你第一阶段复习要实现的目标，因此第二阶段只是一个适应考研题型的阶段，
+锻炼一下熟练程度，第一阶段是起基础作用，甚至决定作用的，万丈高楼平地起
+的道理大家都清楚，但我想如果你能真的体验到这种感觉，你的数学成绩一定会
+有大幅提高。
+
+看完微积分，接下来是线代，一位上研的老乡给了一本胡金德的线代辅导（恩
+波的那本小册子）说很好，我也不想买新书就想将就着用吧，不过现在看来这本
+书的确是一本很经典的教材，对于提高线代水平是很有帮助的，我当时也是先看
+一遍，然后将一些好东西给记下来，也就相当于两遍吧。这一过程花了5天，因
+为一共是五章，刚好一天一章， 当然这里的一天一般也只是一个上午，下午会
+看专业课中的西经，晚上一般留给英语。然后就是概率论了，这也是我觉得最怕
+的一部分。刚好有一天中午很烦躁没睡好，下午学习没精神，于是去书店逛了逛，
+准备买一本概率辅导书，这也是我考研用的第一本自己买的2003版的书，其他
+的都是别人送的旧版的，所以如果你经济有点困难的话，买旧版教材是一样
+的，关键你要真正学到东西。
+
+在书店看到了一本姚孟臣的概率辅导书（机械工业出版社出的那本概率与数
+理统计习题集的提高篇），书前有基础内容的提要，然后每章有相对较多的习题，
+但特点在于他的解答也非常详尽，这样的体例是最适合我的，我想也是大家可以
+考虑的一种。至少纯习题式的书我一直就很不喜欢，包括英语在内。正是这本书
+使得我数学最大的一个空洞被弥补上了，而且应该说此后我才真正知道我是懂概
+率而不是仅会做概率题，但这一结果却是在做题的过程中实现的。
+
+正是在做题的过程中不断的去思考去琢磨不断地加深对基本概念的理解，比
+如分布函数F（x），如果不是这段时间的复习改变了对其的认识，今年的倒第二
+道题目肯定会做错，所以并不一定要把所有题目都做过，你也无法实现这一点，
+重要得是你要使自己具备良好的功底， 做题不是为了做多少数目给自己一点安
+慰，这只是自己骗自己，而是要从做题中得到东西，包括思维的锻炼以及掌握一
+些比较好的题型，甚至要自己去引申一些题型。这是个厚积而薄发的过程。这本
+书是我觉得考研过程中对我帮助最大的一本，那种豁然开朗的感觉至今仍记得。
+第三阶段：对我而言第二阶段的结束已经数学基本上就定型了，而且这时已
+经是8月底9月初了，政治还没开始看，专业课也只是在第二阶段看了一点，
+所以这一段数学开始减少，从9月到考前只看了李永乐的400题，感觉很好，
+题目里知识点涵盖很多，技巧比较强，题也出得比较规范，没有偏题怪题，一般
+2个小时之内就能完成一套，一般能在140左右，而且做数三感觉比数四相应部
+分还要简单些，之间还做了历年真题，觉得比较简单，一般都能两个小时拿下
+90分左右（大家应该注意真题永远是最好的辅导资料，所以一定不要刚开始复
+习就草率地做完）。
+
+但后来也发现有一点问题，就是400题的概率与线代比较强而微积分相对较
+弱，所以后来考前还做了几套严守权的，感觉比较难，也做了几套陈的，都不太
+理想，这时也快考试了，所以也比较紧张，那么这一过程中调整心态就很重要了。
+大家要记住平时考得好并不意味着真考试时就能出好成绩，一般都会打个折扣，
+所以即便你在平时模考时成绩很好，也不要掉以轻心。考前几天还是适当做几套
+题，但强度不要太大，主要是为了维持一下做题的感觉。
+
+接下来就是上考场，一定不要过度紧张，但适度的紧张却是一件好事也不要
+害怕，考试的时候我才发现，平常做题与真正上考场绝对是两回事，心态的变化
+使得你在考场上思维会有些过于活跃无法集中，所以水平的发挥也会收到很大的
+影响，至少我觉得做03题时题目不是很难，但却很不顺手，比如那个应用题5分
+钟就出答案了，可考试的时候会觉得不可能那么简单，于是反复琢磨，白白耽搁
+了20多分钟，最后时间觉得很紧张。这里数学还有一个比较有意思的经历。
+数学最后一道题我想了30多分钟没出来，离考试结束只有8分钟了，前面
+的题目都是很快做出来还没有检查，这时我想放弃，回去检查前面的题目，监考
+老师在我边上走来走去，一时烦躁却突然冒出了灵感，2分钟搞定了这道题目，
+考试的时候的确有些难题是需要放弃，但有时你也许只需再坚持一会儿。此外对
+于会做的题目一定要拿下，把握住做题的精准度，不要无谓失分，这就要求平常
+复习时养成严谨的习惯以及有很扎实的基本功。
+
+总结一下就是：
+\begin{enumerate}
+\item 注重基础，这是许多人可能都听别人所过但又不知如何入手的一点，一
+定要耐得住性子，冰冻三尺非一日之寒，看到别人成功辉煌的同时你也应该更多
+的去思考他(她)成功背后付出的努力。考研本身也是一个人综合素质的测定，一
+个系统的工程。
+\item 着力于思维的锻炼，它对于成绩的提高是整体性的，也是最可靠的途经。
+\item 选好辅导书。我做的题目肯定不算最多的，甚至相对许多人是比较少的，
+但有一点我看的书的种类是比较多的，数学的每一门我都分别选了一册我认为最
+好的辅导教材，这样才是比较合理的选书方法，也能达到最好的复习效果，没有
+必要将赌注都压在一本书上，也没有必要一本书反反复复地看。
+\item 稳定心态，不论复习状态或效果是好是坏，都不要有太大的波动，这点
+上文中提到了比较多。最后我要说的是，这里只是个人的一些体会，并不一定对
+任何人都有用，大家一定要根据自己的实际情况指定复习计划和选择复习方法，
+复习的主动权应该始终把握在自己手中，这些东西只是给你一个参考。
+\end{enumerate}
+\section{面朝大海，春暖花开}
+Facing the Sea With Spring Blossoms—HaiZi
+
+面朝大海，春暖花开—海子
+
+From tomorrow on,I will be a happy man.
+
+从明天起，做一个幸福的人
+
+Grooming,chopping and traveling all over the world.
+
+喂马，劈柴，周游世界
+
+From tomorrow on,I will care foodstuff and vegetable.
+
+从明天起，关心粮食和蔬菜
+
+Living in a house towards the sea, with spring blossoms.
+
+我有一所房子，面朝大海，春暖花开
+
+From tomorrow on,write to each of my dear ones.
+
+从明天起，和每一个人通信
+
+Telling them of my happiness.
+
+告诉他们我的幸福
+
+What the lightening of happiness has told me.
+
+那幸福的闪电告诉我的
+
+I will spread it to each of them.
+
+我将告诉每一个人
+
+Give a warm name for every river and every mountain.
+
+给每一条河每一座山取一个温暖的名字
+
+Strangers,I will also wish you happy.
+
+陌生人，我也为你祝福
+
+May you have a brilliant future!
+
+愿你有一个灿烂的前程
+
+May you lovers eventually become spouses!
+
+愿有情人终成眷属
+
+May you enjoy happiness in this earthly world!
+
+愿你们在尘世获得幸福
+
+I only wish to face the sea, with spring blossoms.
+
+我只愿面朝大海，春暖花开
+%% Public domain image from
+%% http://www.public-domain-image.com/still-life/slides/cherry-tomatos.html
+\renewcommand\chapterillustration{railroad}
+\chapter{The Light of a Bright Day}
+\begin{flushright}
+——\textit{By Helen Keller}
+\end{flushright}
+I choose for my subject faith wrought into life, apart from creed or dogma. By faith I mean a vision of good one cherishes and the enthusiasm that pushes one to seek its fulfillment regardless of obstacles. Faith is a dynamic power that breaks the chain of routine and gives a new, fine turn to old commonplaces. Faith reinvigorates the will, enriches the affections and awakens a sense of creativeness.
+
+Active faith knows no fear, and it is a safeguard to me against cynicism and despair. After all, faith is not one thing or two or three things; it is an indivisible totality of beliefs that inspire me. Belief in God as infinite good will and all-seeing Wisdom whose everlasting arms sustain me walking on the sea of life. Trust in my fellow men, wonder at their fundamental goodness and confidence that after this night of sorrow and oppression they will rise up strong and beautiful in the glory of morning. Reverence for the beauty an preciousness of the earth, and a sense of responsibility to do what I can to make it a habitation of health and plenty for all men. Faith in immortality because it renders less bitter the separation from those I have loved and lost, and because it will free me from unnatural limitations and unfold still more faculties I have in joyous activity. Even if my vital spark should be blown out, I believe that I should behave with courageous dignity in the presence of fate and strive to be a worthy companion of the beautiful, the good, and the True. But fate has its master in the faith of those who surmount it, and limitation has its limits for those who, thought disillusioned, live greatly. True faith is not a fruit of security, it is the ability to blend mortal fragility with the inner strength of the spirit. It does not shift with the changing shades of one's thought.
+
+It was a terrible blow to my faith when I learned that millions of my fellow creatures must labor all their days for food and shelter, bear the most crushing burdens and die without having known the joy of living. My security vanished forever, and I have never regained the radiant belief of my young years that earth is a happy home and hearth for the majority of mankind. But faith is a state of mind. The believer is not soon disheartened. If he is turned out of his shelter, he builds up a house that the winds of the earth cannot destroy.
+
+When I think of the suffering and famine, and the continued slaughter of men, my spirit bleeds, but the thought comes to me that, like the little deaf, dumb and blind child I once was, mankind is growing out of the darkness of ignorance and hate into the light of a brighter day.
+\cleartoverso
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+%% Back cover
+%%%%%%%%%%%%%%%%%%%%%%
+
+%% Temporarily enlarge this page to push
+%% down the bottom margin
+\enlargethispage{3\baselineskip}
+\thispagestyle{empty}
+%\pagecolor[HTML]{0C0303}
+\pagecolor[HTML]{0E0407}
+
+\begin{center}
+\begin{minipage}{.8\textwidth}
+\color{Cornsilk}\Large\bfseries
+
+%\lipsum[1]
+
+\begin{center}
+\huge\bfseries\sffamily\color{lime}`So Calming.'
+\end{center}
+
+When nothing seems to help,I go and look at a stonecutter hammering away at his rock perhaps a hundred times without as much as a crack showing in it.Yet at the hundred and first blow it will split in two,and I know it was not that blow that did it——but all that had gone before.
+\begin{flushright}
+——Jacob Riis
+\end{flushright}
+\end{minipage}
+\end{center}
+
+\vspace*{\stretch{1}}
+
+\begin{center}
+\colorbox{white}{\EANisbn[SC4]}
+
+\vspace*{\baselineskip}
+
+\textbf{\textcolor{LightGoldenrod!50!Gold}{Typeseted by Tsingber Lee}}
+
+\vspace*{\baselineskip}
+
+\textbf{\textcolor{LightGoldenrod}{Cover Illustration by Dusan Bicanski \textbullet\ \texttt{http://www.public-domain-image.com}}}
+\end{center}
+
+\end{document} 

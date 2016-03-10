@@ -1,0 +1,2 @@
+xelatex samplebookdesign-memoir
+xelatex samplebookdesign-memoir
